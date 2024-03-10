@@ -1,4 +1,4 @@
-import { mockUsers } from "../utils/constants.mjs";
+import { mockUsers } from "./constants.mjs"
 
 export const resolveIndexByUserId = (request, response, next) => {
     const { params : {id}, } = request;

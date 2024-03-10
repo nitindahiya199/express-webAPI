@@ -1,11 +1,9 @@
 import express from "express";
-import usersRouter from "../routes/users.mjs";
-import productsRouter from "../routes/products.mjs";
+import router from "./routes/index.mjs"
 
 const app = express();
 app.use(express.json());
-app.use(usersRouter);
-app.use(productsRouter);
+app.use(router);
 
 const PORT = process.env.PORT || 3000;
 
