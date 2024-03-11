@@ -12,6 +12,7 @@ import {
 } from "../utils/validationSchema.mjs";
 import { mockUsers } from "../utils/constants.mjs";
 import { resolveIndexByUserId } from "../utils/middleswares.mjs";
+import session from "express-session";
 
 const router = Router();
 
@@ -73,6 +74,8 @@ router.put(
   resolveIndexByUserId,
   checkSchema(putUserVa1idationSchema),
   (request, response) => {
+    console.log(request.session)
+    console.log(request.session.id)
     const result = validationResult(request);
     console.log(result);
     const { body, findUserIndex } = request;
