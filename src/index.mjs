@@ -2,8 +2,9 @@ import express, { request, response } from "express";
 import router from "./routes/index.mjs";
 import cookieParser from "cookie-parser";
 import session from "express-session";
-import { mockUsers } from "./utils/constants.mjs";
-import {passport} from "passport";
+// import { mockUsers } from "./utils/constants.mjs";
+import passport from "passport";
+import "./strategies/local-stragegy.mjs";
 
 const app = express();
 app.use(express.json());
@@ -18,17 +19,44 @@ app.use(
     },
   })
 );
+
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(router);
+
+app.post(
+  "/api/auth",
+  passport.authenticate("local"),
+  (request, response) => {
+    response.send(200);
+  }
+);
+
+app.get(
+  "/api/auth/status",
+  (request, response) => {
+    console.log(`Inside status`)
+    console.log(`${request.user}`)
+    return request.user ? response.send(request.user) : response.sendStatus(401);
+  }
+);
+
+app.post(
+  "/api/auth/logout",
+  (request, response) => {
+    if(!request.user) return response.sendStatus(401);
+    request.logout((err) => {
+      if(err) return response.sendStatus(400);
+      response.send(200);
+    })
+  }
+);
 
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Running on ${PORT}`);
 });
-
-
-
-
 
 // Login - cookie session Auth
 // app.get("/", (request, response) => {
