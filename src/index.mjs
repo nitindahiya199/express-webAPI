@@ -3,6 +3,7 @@ import router from "./routes/index.mjs";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import { mockUsers } from "./utils/constants.mjs";
+import {passport} from "passport";
 
 const app = express();
 app.use(express.json());
@@ -25,26 +26,31 @@ app.listen(PORT, () => {
   console.log(`Running on ${PORT}`);
 });
 
-app.get("/", (request, response) => {
-  console.log(request.session);
-  console.log(request.session.id);
-  request.session.visited = true;
-  response.cookie("heyy..!!", "Hi", { maxAge: 60000 * 60 * 3 });
-  response.status(201).send({ msg: "Hello...!!" });
-});
 
-app.post("/api/auth", (request, response) => {
-  const {
-    body: { username, password },
-  } = request;
-  const findUser = mockUsers.find((user) => user.username === username);
-  if (!findUser || findUser.password !== password)
-    return response.status(401).send({ msg: "BAD CREDENTIALS" });
-  request.session.user = findUser;
-  return response.status(201).send(findUser);
-});
 
-// app.get("/", (request,response) => {
+
+
+// Login - cookie session Auth
+// app.get("/", (request, response) => {
+//   console.log(request.session);
+//   console.log(request.session.id);
+//   request.session.visited = true;
+//   response.cookie("heyy..!!", "Hi", { maxAge: 60000 * 60 * 3 });
+//   response.status(201).send({ msg: "Hello...!!" });
+// });
+
+// app.post("/api/auth", (request, response) => {
+//   const {
+//     body: { username, password },
+//   } = request;
+//   const findUser = mockUsers.find((user) => user.username === username);
+//   if (!findUser || findUser.password !== password)
+//     return response.status(401).send({ msg: "BAD CREDENTIALS" });
+//   request.session.user = findUser;
+//   return response.status(201).send(findUser);
+// });
+
+// app.get("/api/auth/status", (request,response) => {
 //   request.sessionStore.get((request.sessionID), (err, session) =>{
 //     console.log(session);
 //   });
@@ -53,22 +59,23 @@ app.post("/api/auth", (request, response) => {
 //   : response.status(401).send({msg : "Not Authenticated"})
 // })
 
-app.get("/api/auth/status", (request,response) => {
-  return request.session.user
-  ? response.status(200).send(request.session.user)
-  : response.status(401).send({msg : "Not Authenticated"})
-})
+// app.post("/api/cart", (request, response) => {
+//   if (!request.session.user) return response.sendStatus(401);
 
-app.post("/api/cart", (request, response) => {
-  if (!request.session.user) return response.sendStatus(401);
+//   const { body: item } = request;
+//   const { cart } = request.session;
+//   if (cart) {
+//     cart.push(item);
+//   } else {
+//     request.session.cart = [item];
+//   }
 
-  const { body: item } = request;
-  const { cart } = request.session;
-  if (cart) {
-    cart.push(item);
-  } else {
-    request.session.cart = [item];
-  }
+//   return response.status(201).send(item);
+// });
 
-  return response.status(201).send(item);
-});
+// app.get("/api/cart", (request, response) => {
+//   if (!request.session.user) return response.sendStatus(401);
+
+//   return response.send( request.session.cart ?? [])
+
+// });
