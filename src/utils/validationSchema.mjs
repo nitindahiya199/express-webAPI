@@ -41,5 +41,11 @@ export const putUserVa1idationSchema = {
                 notEmpty: {
             errorMessage: "displayName cannot be empty",
         },
+
+    password: {
+        notEmpty: {
+            errorMessage: "displayName cannot be empty",
+        },
+    }
     }
 }
