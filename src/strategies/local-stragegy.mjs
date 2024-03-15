@@ -23,12 +23,13 @@ passport.deserializeUser(async (id, done) => {
 });
 
 export default passport.use(
-  new Strategy(async (username, passport, done) => {
+  new Strategy(async (username, password, done) => {
     try {
       const findUser = await User.findOne({username});
       if(!findUser) throw new Error("User Not Found");
-      if(!comparePassword(password, findUser.password)) throw new Error("Bad Credentials")
-      done(null, findUser)
+      if(comparePassword(password, findUser.password))
+       throw new Error("Bad Credentials");
+      done(null, findUser);
     } catch (err) {
       done(err, null);
     }
